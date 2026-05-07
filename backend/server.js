@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import passport from 'passport';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -57,9 +58,14 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'pokemon-stickers-secret',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    ttl: 24 * 60 * 60
+  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
