@@ -39,3 +39,4 @@ lerna-debug.log*
 # Misc
 *.log
 .cache
+.vercel
